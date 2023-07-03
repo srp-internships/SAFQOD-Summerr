@@ -32,6 +32,10 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 CUSTOM_APPS = [
     "user",
+    "common",
+    "room",
+    "reservation",
+    "employee"
 ]
 THIRDPART_APP = [
     "rest_framework.authtoken",
