@@ -21,7 +21,7 @@ jobs:
 
       - name: Test
         run: |
-          docker-compose run --rm app sh -c "python3 wait_for_db && python3 manage.py test"
+          docker-compose run --rm app sh -c "python3 manage.py test"
 
       - name: Lint
         run: |
