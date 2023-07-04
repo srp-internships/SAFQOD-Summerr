@@ -1,1 +1,1 @@
-from .rooms import Rooms
+from .room import Room
