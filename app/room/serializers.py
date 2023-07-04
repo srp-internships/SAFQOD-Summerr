@@ -5,11 +5,12 @@ from .models import Room
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = "__all__"
+        fields = ["id", "name", "volume"]
         readonly_felds = [
             "id",
         ]
 
-# class RoomDetailSerializer(RoomSerializer):
-#     class Meta(RoomSerializer.Meta):
-#         fields =
+
+class RoomDetailSerializer(RoomSerializer):
+    class Meta(RoomSerializer.Meta):
+        fields = RoomSerializer.Meta.fields + ["descriptions"]

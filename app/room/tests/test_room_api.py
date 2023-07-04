@@ -5,20 +5,21 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from room import models
-from room.serializers import RoomSerializer
+
+from room.serializers import RoomSerializer, RoomDetailSerializer
 
 ROOM_URLS = reverse("room:room-list")
 
 
 def detail_url(room_id):
-    return reversed("room:room-detail", args=[room_id])
+    """Return URL for room detail"""
+    return reverse("room:room-detail", args=[room_id])
 
 
 def create_room(user, **params):
     """Create and return a sample room instance"""
     defaults = {
         "name": "Sample room name",
-        "descriptions": "Sample room description",
         "volume": 2,
     }
     defaults.update(params)
@@ -83,13 +84,11 @@ class PrivateRoomAPITest(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_get_room_detail(self):
-        """test to get room detail"""
-
+        """Test to get room detail"""
         room = create_room(user=self.user)
-
         url = detail_url(room_id=room.id)
+        res = self.client.get(url)
 
-        self.client.get(url)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
         serializer = RoomDetailSerializer(room)
-
         self.assertEqual(res.data, serializer.data)
