@@ -29,6 +29,11 @@ def create_room(user, **params):
     return room
 
 
+def create_user(**params):
+    """create and return a new user"""
+    return get_user_model().objects.create(**params)
+
+
 class PublicRoomAPITest(TestCase):
     """Unauthenticated API requests for room"""
 
@@ -92,3 +97,88 @@ class PrivateRoomAPITest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         serializer = RoomDetailSerializer(room)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_room(self):
+        payload = {
+            "name": "sample name",
+            "volume": 3,
+        }
+
+        res = self.client.post(ROOM_URLS, payload)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        room = models.Room.objects.get(id=res.data["id"])
+
+        for k, v in payload.items():
+            self.assertEqual(getattr(room, k), v)
+
+        self.assertEqual(room.user, self.user)
+
+    def test_partial_upadate(self):
+        """test partial update of room"""
+        cur_volume = 2
+        room = models.Room.objects.create(
+            user=self.user, name="sample name", volume=cur_volume
+        )
+        payload = {
+            "name": "new room title",
+        }
+        url = detail_url(room.id)
+        res = self.client.patch(url, payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        room.refresh_from_db(fields=["name"])
+        self.assertEqual(room.volume, cur_volume)
+        self.assertEqual(room.user, self.user)
+
+    def test_full_update(self):
+        room = create_room(
+            user=self.user,
+            name="new room name",
+            volume=2,
+            descriptions="new descriptions",
+        )
+
+        payload = {
+            "name": "new room name",
+            "volume": 2,
+            "descriptions": "new descriptions",
+        }
+
+        url = detail_url(room.id)
+        res = self.client.put(url, payload)
+
+        for k, v in payload.items():
+            self.assertEqual(getattr(room, k), v)
+
+        self.assertEqual(room.user, self.user)
+
+    def update_user_return_error(self):
+        new_user = create_user(email="user2@example", password="test123")
+        room = create_room(user=self.user)
+        payload = {"user": new_user}
+
+        url = detail_url(room_id=room.id)
+        self.client.patch(url, payload)
+
+        room.refresh_from_db()
+        self.assertEqual(room.user, self.user)
+
+    def test_delete_room(self):
+        room = create_room(user=self.user)
+
+        url = detail_url(room_id=room.id)
+
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(models.Room.objects.filter(id=room.id).exists())
+
+    def test_delete_other_users_room_error(self):
+        new_user = create_user(email="user2@example.com", password="test123")
+
+        room = create_room(user=new_user)
+        url = detail_url(room_id=room.id)
+        res = self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertTrue(models.Room.objects.filter(id=room.id).exists())

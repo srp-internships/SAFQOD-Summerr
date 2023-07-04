@@ -25,3 +25,6 @@ class RoomAPIViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return RoomSerializer
         return self.serializer_class
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
