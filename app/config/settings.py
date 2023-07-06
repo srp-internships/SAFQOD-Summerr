@@ -35,9 +35,8 @@ CUSTOM_APPS = [
     "common",
     "room",
     "reservation",
-    "employee"
 ]
-THIRDPART_APP = [
+THIRDPARTY_APPS = [
     "rest_framework.authtoken",
     "rest_framework",
     "drf_spectacular",
@@ -53,7 +52,7 @@ INSTALLED_APPS = (
         "django.contrib.staticfiles",
     ]
     + CUSTOM_APPS
-    + THIRDPART_APP
+    + THIRDPARTY_APPS
 )
 
 MIDDLEWARE = [
@@ -124,18 +123,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
 
 USE_I18N = True
 
-USE_TZ = True
+USETZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -147,5 +145,5 @@ AUTH_USER_MODEL = "user.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    # Другие настройки REST_FRAMEWORK
+    # Other REST_FRAMEWORK settings
 }
