@@ -3,3 +3,4 @@ djangorestframework==3.14.0
 flake8==6.0.0
 psycopg2-binary==2.9.6
 drf-spectacular==0.26.3
+django-filter==23.2

@@ -8,11 +8,11 @@ User = get_user_model()
 
 
 def create_user(email="user@example.com", password="password123"):
-    """Create and return new user or employee"""
-    return get_user_model().objects.create(email=email, password=password)
+    """Create and return new user"""
+    return get_user_model().objects.create_user(email=email, password=password)
 
 
-def create_room(user, name="room_name",volume=4 descriptions="Sample description"):
+def create_room(user, name="room_name", volume=4, descriptions="Sample description"):
     room = Room.objects.create(
         user=user,
         name=name,
@@ -31,12 +31,12 @@ class ReservationModelTest(TestCase):
         start_datetime = datetime.datetime.now()
         end_datetime = start_datetime + datetime.timedelta(hours=1)
         reservation = models.Reservation.objects.create(
-            user=user,
+            reserved_by=user,
             room=room,
             start_datetime=start_datetime,
             end_datetime=end_datetime,
         )
-        self.assertEqual(reservation.user, user)
+        self.assertEqual(reservation.reserved_by, user)
         self.assertEqual(reservation.room, room)
         self.assertEqual(reservation.start_datetime, start_datetime)
         self.assertEqual(reservation.end_datetime, end_datetime)

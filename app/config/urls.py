@@ -37,5 +37,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/user/", include("user.urls", namespace="user")),
     path("api/room/", include("room.urls", namespace="room")),
-    path("api/reservation/", include("reservation.urls", namespace="reservation")),
+    path(
+        "api/reservation/",
+        include(("reservation.urls", "reservation"), namespace="reservation"),
+    ),
 ]
