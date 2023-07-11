@@ -13,3 +13,5 @@ class Room(BaseModel):
     class Meta:
         verbose_name = "Комната"
         verbose_name_plural = "Комнаты"
+
+    

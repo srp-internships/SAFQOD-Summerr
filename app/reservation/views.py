@@ -25,6 +25,9 @@ class ReservationViewSet(
         user = self.request.user
         return Reservation.objects.filter(reserved_by=user)
 
+    def perform_create(self, serializer):
+        serializer.save(reserved_by=self.request.user)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

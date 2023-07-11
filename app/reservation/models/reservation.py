@@ -21,10 +21,10 @@ class Reservation(models.Model):
     end_datetime = models.DateTimeField()
 
     def __str__(self):
-        return f"Reservation for {self.reserved_by} in {self.room}"
+        return f"Резервация для {self.reserved_by} в {self.room}"
 
     class Meta:
-        verbose_name = "User Reservation"
+        verbose_name = "Резервация"
         verbose_name_plural = "User Reservations"
 
     @property
